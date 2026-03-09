@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart To-Do List — DSA Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+        <span class="logo-text">Smart<span>Todo</span></span>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill" id="backend-indicator">
+          <span style="color:#f59e0b">● Connecting…</span>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-dot" style="background:var(--low)"></div>
+          Done: <strong id="stat-done">0</strong>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-dot" style="background:var(--high)"></div>
+          Pending: <strong id="stat-pending">0</strong>
+        </div>
+        <div class="stat-pill">🔔 Reminders: <strong id="stat-remind">0</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast Container -->
+  <div id="reminder-container"></div>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- Hero -->
+    <div class="hero">
+      <h1>TO-DO-LIST <BR><em>Smartly</em></h1>
+      <p>Powered by real Data Structures &amp; Algorithms — Linked Lists, Stacks, Heaps &amp; more</p>
+    </div>
+
+    <!-- ADD TASK CARD -->
+    <div class="add-card">
+      <div class="add-card-header">
+        <h2>Add New Task</h2>
+        <span class="badge">LinkedList Insert + Heap Push</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="inp-name">Task Name</label>
+          <input type="text" id="inp-name" placeholder="e.g. Submit assignment" maxlength="60">
+        </div>
+        <div class="field">
+          <label for="inp-time">Start Date &amp; Time</label>
+          <input type="datetime-local" id="inp-time">
+        </div>
+        <div class="field">
+          <label for="inp-priority">Priority</label>
+          <select id="inp-priority">
+            <option value="1">🔴 High</option>
+            <option value="2" selected>🟡 Medium</option>
+            <option value="3">🟢 Low</option>
+          </select>
+        </div>
+        <button class="btn-add" onclick="addTask()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add Task
+        </button>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="search-inp" placeholder="Search tasks…" oninput="onSearch()">
+      </div>
+      <div class="toolbar-group">
+        <select class="filter-select" id="search-algo" onchange="onSearch()">
+          <option value="linear">Linear Search</option>
+          <option value="binary">Binary Search</option>
+        </select>
+        <span class="search-info" id="search-info"></span>
+      </div>
+      <div class="toolbar-group">
+        <button class="btn-sort active" id="sort-heap" onclick="sortBy('heap')">⬆ Priority</button>
+        <button class="btn-sort" id="sort-time" onclick="sortBy('time')">🕐 Time</button>
+        <button class="btn-sort" id="sort-name" onclick="sortBy('name')">🔤 A→Z</button>
+        <button class="btn-sort" id="sort-none" onclick="sortBy('none')">☰ Default</button>
+      </div>
+      <div class="toolbar-group">
+        <button class="btn-sort" onclick="undoAction()">↩ Undo</button>
+        <button class="btn-sort" onclick="redoAction()">↪ Redo</button>
+        <button class="btn-sort" onclick="getNextTask()">🎯 Next</button>
+        <button class="btn-sort" onclick="showDsaStats()">📊 Status</button>
+      </div>
+    </div>
+
+    <!-- TASK LIST -->
+    <div class="tasks-section">
+      <div class="tasks-header">
+        <h3 id="tasks-heading">All Tasks</h3>
+        <span class="tasks-count" id="tasks-count"></span>
+      </div>
+      <div class="task-list" id="task-list">
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <rect x="12" y="8" width="40" height="48" rx="6" stroke="#93c5fd" stroke-width="2.5"/>
+            <line x1="22" y1="24" x2="42" y2="24" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <line x1="22" y1="32" x2="36" y2="32" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h4>No tasks yet</h4>
+          <p>Add your first task above to get started</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DSA STRIP -->
+    <div class="dsa-strip">
+      <span><span class="dsa-strip-label">DSA Engine</span></span>
+      <span class="dsa-chip">Storage: <span>Linked List</span></span>
+      <span class="dsa-chip">Undo/Redo: <span>Stack</span></span>
+      <span class="dsa-chip">Priority Sort: <span>Binary Heap</span></span>
+      <span class="dsa-chip">Name Sort: <span>Merge Sort</span></span>
+      <span class="dsa-chip">Time Sort: <span>Insertion Sort</span></span>
+      <span class="dsa-chip">Search: <span>Linear / Binary</span></span>
+      <span class="dsa-chip">Reminders: <span>Circular Queue</span></span>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
