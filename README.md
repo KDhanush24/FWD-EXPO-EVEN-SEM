@@ -1,4 +1,4 @@
-# 🎯 SmartTodo — Modern Task Management Dashboard
+# 🎯 To do list smartly — Modern Task Management Dashboard
 
 A high-performance, "Smart" To-Do application built with a focus on **Minimalism**, **Glassmorphism**, and **Fluid UX**. This project demonstrates a professional-grade dashboard using only Vanilla Frontend technologies.
 
